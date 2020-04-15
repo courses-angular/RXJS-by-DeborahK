@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
-import { Subscription } from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 
 import { Product } from './product';
 import { ProductService } from './product.service';
@@ -14,21 +14,16 @@ export class ProductListComponent implements OnInit, OnDestroy {
   errorMessage = '';
   categories;
 
-  products: Product[] = [];
-  sub: Subscription;
+  products$: Observable<Product[]>;
 
   constructor(private productService: ProductService) { }
 
   ngOnInit(): void {
-    this.sub = this.productService.getProducts()
-      .subscribe(
-        products => this.products = products,
-        error => this.errorMessage = error
-      );
+    this.products$ = this.productService.getProducts()
+
   }
 
   ngOnDestroy(): void {
-    this.sub.unsubscribe();
   }
 
   onAdd(): void {
